@@ -1,0 +1,42 @@
+#Decorator
+
+def cached(function):
+    cache_dict = dict()
+
+    def wrapper_func(*args, **kwargs):
+        if function in cache_dict:
+            if str((args, kwargs)) in cache_dict[function]:
+                return cache_dict[function][str((args, kwargs))]
+
+            else:
+                res = function(*args, **kwargs)
+                cache_dict[function] = {str((args, kwargs)): res}
+                return res
+
+        else:
+            res = function(*args, **kwargs)
+            func_cache_dict = dict()
+            func_cache_dict[str((args, kwargs))] = res
+            cache_dict[function] = func_cache_dict
+            return res
+
+    return wrapper_func
+
+
+@cached
+def adding(*args):
+    return args[0] + args[1]
+
+@cached
+def subtract(*args):
+    return args[0] - args[1]
+
+
+print adding(1, 5)
+print adding(1, 5)
+print subtract(1, 5)
+
+
+
+
+
